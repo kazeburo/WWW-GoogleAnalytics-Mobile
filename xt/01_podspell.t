@@ -9,3 +9,8 @@ __DATA__
 Masahiro Nagano
 kazeburo {at} gmail.com
 Plack::App::GAMobile
+PSGI
+env
+url
+checksum
+
