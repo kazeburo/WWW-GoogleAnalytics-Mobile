@@ -8,7 +8,8 @@ all_pod_files_spelling_ok('lib');
 __DATA__
 Masahiro Nagano
 kazeburo {at} gmail.com
-Plack::App::GAMobile
+WWW::GoogleAnalytics::Mobile
+WWW::GoogleAnalytics::Mobile::PSGI
 PSGI
 env
 url
