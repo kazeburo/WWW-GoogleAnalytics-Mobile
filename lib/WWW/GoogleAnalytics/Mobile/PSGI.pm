@@ -1,4 +1,4 @@
-package Plack::App::GAMobile;
+package WWW::GoogleAnalytics::Mobile::PSGI;
 
 use strict;
 use warnings;
@@ -14,8 +14,6 @@ use Plack::Request;
 use Plack::Request;
 
 use Plack::Util::Accessor qw/secret timeout/;
-
-our $VERSION = '0.01';
 
 our $GAM_VERSION = '4.4sp';
 our $GAM_COOKIE_NAME = '__utmmobile';
@@ -162,38 +160,71 @@ __END__
 
 =head1 NAME
 
-Plack::App::GAMobile - Google Analytics Mobile Beacon 
+GoogleAnalytics::Mobile::PSGI - Server-side PSGI application of Google Analytics for Mobile
 
 =head1 SYNOPSIS
 
-  use Plack::App::GAMobile;
+  use WWW::GoogleAnalytics::Mobile::PSGI;
   use Plack::Builder;
 
   builder {
-      mount "/gam" => Plack::App::GAMobile->new(
+      mount "/gam" => WWW::GoogleAnalytics::Mobile::PSGI->new(
           secret => 'my very secret key',
           timeout => 4,
       );
   };
 
-  # in app
-
-  use Plack::GAMobile
-
-  my $gam = Plack::GAMobile->new(
-      secret => 'my very secret key',
-      base_url => '/gam',
-      account => 'ACCOUNT ID GOES HERE',
-  );
-
-  my $image_url = $gam->image_url($env);
-
-  # in template
-  <img src="[% image_url %]" />
-
 =head1 DESCRIPTION
 
-The server-side application for Google Analytics Mobile.
+The server-side PSGI application of Google Analytics Mobile.
+
+=head1 METHOD
+
+=over 4
+
+=item new
+
+=over 4
+
+=item secret
+
+Secret key of checksum. Set same secret of WWW::GoogleAnalytics::Mobile
+
+=item timeout
+
+Timeout second of request to Google.
+
+=back
+
+=back
+
+=head1 OPTIMIZE
+
+=over 4
+
+=item proxy
+
+Set environment value to use http proxy for accessing to Google. 
+
+  my $app = WWW::GoogleAnalytics::Mobile::PSGI->new()->to_app;
+  $app = sub {
+      local $ENV{http_proxy} = 'http://172.0.0.3';
+      $app->(shift);
+  };
+
+=item Cache DNS queries
+
+WWW::GoogleAnalytics::Mobile::PSGI uses L<Furl::HTTP> and L<Net::DNS::Lite> for requesting to Google. You can cache DNS queries with Cache::LRU for more speed.
+
+  use WWW::GoogleAnalytics::Mobile::PSGI;
+  use Cache::LRU;
+
+  # setup cache for Net::DNS::Lite
+  $Net::DNS::Lite::CACHE = Cache::LRU->new(
+      size => 256,
+  );
+
+=back
 
 =head1 AUTHOR
 
@@ -201,7 +232,7 @@ Masahiro Nagano E<lt>kazeburo {at} gmail.comE<gt>
 
 =head1 SEE ALSO
 
-L<Plack::GAMobile>, L<http://code.google.com/intl/ja/mobile/analytics/>
+L<WWW::GoogleAnalytics::Mobile>, L<http://code.google.com/intl/ja/mobile/analytics/>
 
 =head1 LICENSE
 

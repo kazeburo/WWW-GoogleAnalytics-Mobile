@@ -1,6 +1,6 @@
 use inc::Module::Install;
-name 'Plack-App-GAMobile';
-all_from 'lib/Plack/App/GAMobile.pm';
+name 'WWW-GoogleAnalytics-Mobile';
+all_from 'lib/WWW/GoogleAnalytics/Mobile.pm';
 
 requires 'Furl', 0.31;
 requires 'URI';

@@ -1,4 +1,4 @@
-package Plack::GAMobile;
+package WWW::GoogleAnalytics::Mobile;
 
 use strict;
 use warnings;
@@ -8,6 +8,8 @@ use URI;
 use URI::QueryParam;
 
 use Plack::Util::Accessor qw/base_url account secret/;
+
+our $VERSION = '0.01';
 
 sub new {
     my $class = shift;
@@ -69,13 +71,13 @@ __END__
 
 =head1 NAME
 
-Plack::GAMobile - Google Analytics Mobile Beacon Image URL generator
+WWW::GoogleAnalytics::Mobile - Image URL generator of Google Analytics for Mobile beacon
 
 =head1 SYNOPSIS
 
-use Plack::GAMobile;
+  use WWW::GoogleAnalytics::Mobile;
 
-  my $gam = Plack::GAMobile->new(
+  my $gam = WWW::GoogleAnalytics::Mobile->new(
       secret => 'my very secret key',
       base_url => '/gam',
       account => 'ACCOUNT ID GOES HERE',
@@ -86,9 +88,24 @@ use Plack::GAMobile;
   # in template
   <img src="[% image_url %]" />
 
+  # server-side
+  use WWW::GoogleAnalytics::Mobile::PSGI;
+  use Plack::Builder;
+
+  builder {
+      mount "/gam" => WWW::GoogleAnalytics::Mobile::PSGI->new(
+          secret => 'my very secret key',
+          timeout => 4,
+      );
+      $app;
+  };
+
+
+
 =head1 DESCRIPTION
 
-Plack::GAMobile is Plack::App::GAMobile's client. This module generate beacon image url.
+WWW::GoogleAnalytics::Mobile makes URI of Google Analytics of Mobile beacon that runs
+by WWW::GoogleAnalytics::Mobile::PSGI.
 
 =head1 METHOD
 
@@ -96,7 +113,7 @@ Plack::GAMobile is Plack::App::GAMobile's client. This module generate beacon im
 
 =item new
 
-Create instance of Plack::GAMobile.
+Create instance of WWW::GoogleAnalytics::Mobile
 
 =over 4
 
@@ -106,7 +123,7 @@ Base URL of beacon image.
 
 =item secret
 
-Secret key of making checksum. Set same secret of Plack::App::GAMobile.
+Secret key of making checksum. Set same secret of WWW::GoogleAnalytics::Mobile::PSGI
 
 =item account
 
@@ -126,7 +143,7 @@ Masahiro Nagano E<lt>kazeburo {at} gmail.comE<gt>
 
 =head1 SEE ALSO
 
-L<Plack::App::GAMobile>, L<http://code.google.com/intl/ja/mobile/analytics/>
+L<WWW::GoogleAnalytics::Mobile::PSGI>, L<http://code.google.com/intl/ja/mobile/analytics/>
 
 =head1 LICENSE
 

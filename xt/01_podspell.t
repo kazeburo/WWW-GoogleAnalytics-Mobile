@@ -13,4 +13,6 @@ PSGI
 env
 url
 checksum
+DNS
+http
 

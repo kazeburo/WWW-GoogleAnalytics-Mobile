@@ -1,4 +1,4 @@
 use strict;
 use Test::More tests => 1;
 
-BEGIN { use_ok 'Plack::App::GAMobile' }
+BEGIN { use_ok 'WWW::GoogleAnalytics::Mobile' }
