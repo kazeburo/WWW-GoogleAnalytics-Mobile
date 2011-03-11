@@ -71,7 +71,7 @@ __END__
 
 =head1 NAME
 
-WWW::GoogleAnalytics::Mobile - Image URL generator of Google Analytics for Mobile beacon
+WWW::GoogleAnalytics::Mobile - PSGI Application of Google Analytics for Mobile
 
 =head1 SYNOPSIS
 
