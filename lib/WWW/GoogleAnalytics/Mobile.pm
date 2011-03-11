@@ -3,7 +3,7 @@ package WWW::GoogleAnalytics::Mobile;
 use strict;
 use warnings;
 use Carp;
-use Digest::MD5;
+use Digest::SHA qw/hmac_sha1_hex/;
 use URI;
 use URI::QueryParam;
 
@@ -50,7 +50,7 @@ sub image_url {
         $referer = $r_uri->as_string;
     }
 
-    my $digest = substr( Digest::MD5::md5_hex($self->secret . $utmn . $domain . $path), 16, 6 );
+    my $digest = substr( hmac_sha1_hex($utmn . $domain . $path, $self->secret), 16, 6 );
 
     my $url = URI->new($self->base_url);
     $url->query_form_hash({

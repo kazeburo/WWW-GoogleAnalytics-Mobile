@@ -9,9 +9,9 @@ use URI::QueryParam;
 use List::Util qw/first/;
 use Furl;
 use Net::DNS::Lite;
-use Digest::MD5;
+use Digest::SHA qw/hmac_sha1_hex sha1_hex/;
 use Plack::Request;
-use Plack::Request;
+use Plack::Response;
 
 use Plack::Util::Accessor qw/secret timeout/;
 
@@ -30,6 +30,8 @@ my $GIF_DATA = pack "C43", (
     0x00, 0x00, 0x01, 0x00, 0x01, 0x00,
     0x00, 0x02, 0x02, 0x44, 0x01, 0x00,
     0x3b );
+
+our $DEBUG = 0;
 
 sub prepare_app {
     my $self = shift;
@@ -58,7 +60,7 @@ sub call {
         return ['403', ['Content-Type' => 'text/plain'], ['no checksum'] ];
     }
     if ( $req->param('cs') ne
-             substr( Digest::MD5::md5_hex($self->secret . $utmn . $domain_name . $document_path), 16, 6 ) ) {
+             substr( hmac_sha1_hex($utmn . $domain_name . $document_path, $self->secret), 16, 6 ) ) {
         return ['403', ['Content-Type' => 'text/plain'], ['checksum not match'] ];
     }
 
@@ -121,7 +123,10 @@ sub call {
         expires => $GAM_COOKIE_USER_PERSISTENCE,
     };
     $res->body($GIF_DATA);
-
+    if ( $DEBUG ) {
+        $res->header('X-GAM-Code', $status);
+        $res->header('X-GAM-URI', $utm_url);
+    }
     return $res->finalize;
 }
 
@@ -150,8 +155,7 @@ sub get_visitor_id {
         $message = $user_agent . int(rand 0x7fffffff );
     }
 
-    my $md5_string = Digest::MD5::md5_hex($message);
-    return "0x" . substr($md5_string, 0, 16);
+    return "0x" . substr(sha1_hex($message), 0, 16);
 }
 
 
