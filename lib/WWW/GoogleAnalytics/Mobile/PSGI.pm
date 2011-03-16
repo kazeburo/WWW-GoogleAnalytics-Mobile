@@ -202,7 +202,7 @@ Timeout second of request to Google.
 
 =back
 
-=head1 OPTIMIZE
+=head1 OPTIMIZING
 
 =over 4
 

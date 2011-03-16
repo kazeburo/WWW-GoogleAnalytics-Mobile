@@ -101,7 +101,6 @@ WWW::GoogleAnalytics::Mobile - PSGI Application of Google Analytics for Mobile
   };
 
 
-
 =head1 DESCRIPTION
 
 WWW::GoogleAnalytics::Mobile makes URI of Google Analytics of Mobile beacon that runs
